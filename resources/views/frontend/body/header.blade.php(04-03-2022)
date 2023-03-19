@@ -1,0 +1,245 @@
+
+<header class="ps-header ps-header--2 ps-header--8">
+            <div class="ps-header__middle">
+                <div class="head-container">
+                    
+                    <div class="ps-logo"><a href="{{ url('/') }}"> <img src="{{ URL::asset('frontend/img/cancard-logo.png') }}" alt><img class="sticky-logo" src="{{ URL::asset('frontend/img/cancard-logo.png') }}" alt></a></div><a class="ps-menu--sticky" href="#"><i class="fa fa-bars"></i></a>
+                    <div class="ps-header__right">
+                        <ul class="ps-header__icons">
+                            @auth
+                            
+                            <li class="languages">
+                                <a href="#" onclick="doGTranslate('en|en');return false;" title="English" class=" nturl notranslate" style="background-position:-0px -0px;">EN</a> | 
+                                <a href="#" onclick="doGTranslate('en|fr');return false;" title="French" class=" nturl notranslate" style="background-position:-100px -400px;">FR</a>
+                                <div id="google_translate_element2"></div>
+                            </li>
+                            <li><a class="ps-header__item open-search" href="#"><i class="icon-magnifier"></i></a></li>
+                            
+                            <li><a class="ps-header__item" href="#" id="cart-mini"><i class="icon-cart-empty"></i><span class="badge" id="cartitemcount">0</span></a>
+                                <div class="ps-cart--mini">
+                                    <div class="" id="minicartresults">
+                                        
+                                    <ul class="ps-cart__items">
+                                         @foreach($cartitems as $cartitem)
+                                            
+                                            <li class="ps-cart__item">
+                                                <div class="ps-product--mini-cart">
+                                                    <a class="ps-product__thumbnail" href="#">
+                                                        <?php  $exists = Storage::disk('public')->exists('/uploads/product-thumbnail/'.$cartitem->productimage);?>
+                                                        @if($exists && $cartitem->productimage!=NULL)
+                                                            <img class="img-fluid z-depth-1" src="{{ asset('storage/uploads/product-thumbnail/'.$cartitem->productimage) }}"/>
+                                                        @else
+                                                             <img class="img-fluid z-depth-1" src="{{ asset('storage/uploads/product/'.$cartitem->productimage) }}"/>
+                                                        @endif
+                                                    </a>
+                                                    <div class="ps-product__content"><a class="ps-product__name" href="#">{{$cartitem->productname}}</a>
+                                                        <p class="ps-product__meta"> <span class="ps-product__price">${{$cartitem->price}}</span></p>
+                                                    </div><a class="ps-product__remove" href="javascript: void(0)"><i class="icon-cross"></i></a>
+                                                </div>
+                                            </li>
+                                           
+                                        @endforeach
+                                    </ul>
+                                    
+                                    
+                                    
+                                    </div>
+                                </div>
+                            </li>
+                            <li><a class="ps-header__item" href="{{ url('/dashboard') }}" id="login-modal"><i class="icon-user"></i></a> {{ Auth::user()->name }}</li>
+                            @endauth
+                            @guest
+                                <li><a class="ps-header__item" href="{{ url('/login') }}" id="login-modal"><i class="icon-user"></i></a></li>
+                            @endguest
+                        </ul>
+                        <div class="ps-header__search">
+                            <form method="post" action="{{ route('product.search') }}" id="searchform">
+                            @csrf
+                                <div class="ps-search-table">
+                                    <div class="input-group">
+                                        <input class="form-control ps-input" type="text" placeholder="Search for products" name="search" id="searchinput" value="{!! !empty($searchterm) ? $searchterm : '' !!}">
+                                        <div class="input-group-append"><button type="submit"><i class="fa fa-search"></i></div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="ps-search--result">
+                                <div class="ps-result__content">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ps-middle__text">Need help? <strong><a href="tel:+18559491110">855-949-1110</a></strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="wsmainwp clearfix">
+            <!--Main Menu HTML Code-->
+            <nav class="wsmenu clearfix">
+              <ul class="wsmenu-list">
+                <li aria-haspopup="true" class=""><a href="{{ url('/') }}" class="{{ (Request::is('/') ? 'menuactive' : '') }}">Home</a></li>
+                <li aria-haspopup="true"><a href="#" onclick="myFunction()" class="{{Request::routeIs('categorydetail')? 'menuactive':''}}">Products <span class="wsarrow"></span></a>
+                    <ul class="sub-menu"id="myDIV">
+                    @php
+                    $i=0;
+                    @endphp
+                    @foreach($headercategories as $category)
+                        @php
+                        $hassubcat=0; 
+                        @endphp
+                        @if($category->parentid==null)
+                            <li aria-haspopup="true" >
+                                <a href="{{route('categorydetail',$category->slug)}}"onclick="mySubFunction()">{{ ucwords(strtolower($category->name)) }}</a>
+                                @foreach($headersubcategories as $subcategory)
+                                    @if($subcategory->parentid==$category->id)
+                                        @php
+                                        $hassubcat=1;
+                                        @endphp
+                                        @break
+                                    @endif
+                                @endforeach
+                                @if($hassubcat)
+                                <ul class="sub-menu"id="mySubDiv">
+                                    @foreach($headersubcategories as $subcategory)
+                                        @if($subcategory->parentid==$category->id)
+                                            <li><a href="{{route('categorydetail',$subcategory->slug)}}">{{ ucwords(strtolower($subcategory->name)) }}</a></li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                                @endif
+                            </li>
+                        @endif
+                    @endforeach
+                    </ul>
+                </li>
+                @foreach($headerindustries as $headerindustry)
+                        <li aria-haspopup="true"><a href="{{route('applicationdetail',$headerindustry->slug)}}" class="{{ (Request::segment(1) === 'application' && Request::segment(2) === $headerindustry->slug) ? 'menuactive' : null }}"">{{$headerindustry->applicationname}}</a></li>
+                @endforeach
+                
+                <li aria-haspopup="true"><a href="{{route('servicesupport')}}" class="{{Request::routeIs('servicesupport')? 'menuactive':''}}">Service & Support</a></li>
+                <li aria-haspopup="true"><a href="{{route('store')}}" class="{{Request::routeIs('store')? 'menuactive':''}}">E-Store</a></li>
+                <!--<li aria-haspopup="true"><a href="{{route('aboutus')}}">About Us</a></li>--> 
+                <li aria-haspopup="true"><a href="{{route('contactus')}}" class="{{Request::routeIs('contactus')? 'menuactive':''}}">Contact Us</a></li> 
+                <li aria-haspopup="true"><a href="{{route('requestquotelist')}}" class="{{Request::routeIs('requestquotelist')? 'menuactive':''}}">My Quote<span id="myquotecount"></span></a></li> 
+              </ul>
+            </nav>
+            <div class="ps-navigation__right">Need help? <strong><a href="tel:+18559491110">855-949-1110</a></strong></div>
+            <!--Menu HTML Code-->
+          </div>
+            
+        </header>
+        
+
+        <header class="ps-header ps-header--8 ps-header--mobile">
+            <!--<div class="ps-noti">
+                <div class="container">
+                    <p class="m-0">Due to the <strong>COVID 19 </strong>epidemic, orders may be processed with a slight delay</p>
+                </div><a class="ps-noti__close"><i class="icon-cross"></i></a>
+            </div>-->
+            <div class="ps-header__middle">
+                <div class="container">
+                    
+                    <div class="ps-logo"><a href="{{ url('/') }}"> <img src="{{ URL::asset('frontend/img/mobile-logo.png') }}" alt></a></div>
+                    <div class="ps-header__right">
+                        <ul class="ps-header__icons mr-5">
+                            <li><a class="ps-header__item open-search" href="#"><i class="fa fa-search"></i></a></li>
+                        </ul>
+                        <div class="wsmobileheader clearfix ">
+                        <a id="wsnavtoggle" class="wsanimated-arrow"><span></span></a>
+                      </div>
+                        <nav class="navbar navbar-default headermobilemenu">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <svg viewBox="0 0 100 80" width="40" height="40">
+                <rect width="100" height="20"></rect>
+                <rect y="30" width="100" height="20"></rect>
+                <rect y="60" width="100" height="20"></rect>
+              </svg>
+            </button>
+
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="has-mega-menu"><a href="{{ url('/') }}">Home</a></li>
+                    
+                    <li class="dropdown">
+                        <a href="{{url('/products')}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Products <span class="caret"></span></a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <div class="container">
+                                <div class="row">
+                                    @foreach($headercategories as $category)
+                                        @if($category->parentid==null)
+                                            <div class="col-xs-6 col-md-3">
+                                                <ul class="nav flex-column">
+                                                    <li class="nav-item">
+                                                        <a href="{{route('categorydetail',$category->slug)}}"><span class="nav-link text-bold">{{$category->name}}</span></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                    
+                                </div>
+                            </div>
+                            <!--  /.container  -->
+
+
+                        </div>
+                        </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Industries <span class="caret"></span></a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-3">
+                                        <ul class="nav flex-column">
+                                            @foreach($headerindustries as $headerindustry)
+                                                    <li><a href="{{route('applicationdetail',$headerindustry->slug)}}">{{$headerindustry->applicationname}}</a></li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  /.container  -->
+
+                        </div>
+                        </li>
+                        <li class=""><a href="{{route('servicesupport')}}">Service & Support</a></li>
+                    <li class=""><a href="{{route('store')}}">E-Store</a></li>
+                    <li class=""><a href="{{route('aboutus')}}">About</a></li>
+                    <li class=""><a href="{{route('contactus')}}">Contact</a></li> 
+                    <li class=""><a href="{{route('requestquotelist')}}">My Quote<span id="myquotecount"></span></a></li> 
+                </ul>
+
+
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <script>
+function myFunction() {
+  var x = document.getElementById("myDIV");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+function mySubFunction() {
+  var m = document.getElementById("mySubDIV");
+  if (m.style.display === "none") {
+    m.style.display = "block";
+  } else {
+    m.style.display = "none";
+  }
+}
+</script>

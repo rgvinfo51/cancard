@@ -1,0 +1,95 @@
+@extends('frontend.mainmaster')
+@section('title')
+@if($categorydetail->metatitle!='')
+    {{ $categorydetail->metatitle }}
+    @else
+    {{ $categorydetail->name }}
+    @endif
+@stop
+
+@section('metakeywords')
+@if($categorydetail->metakeywords!='')
+    {{ $categorydetail->metakeywords }}
+    @endif
+@stop
+
+@section('description')
+@if($categorydetail->metadescription!='')
+    {{ $categorydetail->metadescription }}
+@endif
+@stop
+@section('content')
+<div class="breadcrumb-block breadcrumb-full">
+    <ul class="ps-breadcrumb">
+        <li class="ps-breadcrumb__item"><a href="{{url('')}}">Home</a></li>
+        <li class="ps-breadcrumb__item active" aria-current="page">{{$categorydetail->name}}</li>
+    </ul>
+</div>
+<div class="ps-home ps-home--8">
+    <div class="ps-home__content">
+        <div class="container-fluid">
+            <section class="ps-section--banner ps-banner--container row"> 
+                <div class="col-md-12 col-sm-12 pdr-0">
+                    <div class="static-banner-block">
+                        <div class="static-banner-img">
+                            <?php  $exists = Storage::disk('public')->exists('/uploads/categorybanner/'.$categorydetail->banner);?>
+                            @if($exists && $categorydetail->banner!=NULL)
+                                <img class="" src="{{ asset('storage/uploads/categorybanner/'.$categorydetail->banner) }}"/>
+                            @endif
+                        </div>
+                        <div class="ps-banner static-banner-content">
+                            <h1 class="ps-banner__title text-white">{{$categorydetail->name}}</h1>
+                            @if($categorydetail->shortdescription!='' || $categorydetail->shortdescription!=NULL)
+                            <p>{{$categorydetail->shortdescription}}</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <section class="ps-about--info container-fluid">
+        <div class="container">
+            <div class="ps-about__extent mt-0 categorydescription">
+                <div class="row">
+                    <div class="col-md-12">
+                       {!! $categorydetail->description !!}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ps-section--blog container-fluid product-catogory-block prd-bg-white">
+        <div class="container">
+            <div class="product-category-listing">
+                 @foreach($subcategorylist as $subcategory)
+                    <div class="ps-section__item">
+                        <div class="ps-blog--latset">
+                            <div class="ps-blog__thumbnail">
+                                <a href="{{route('categorydetail',$subcategory->slug)}}">
+                                     <?php  $exists = Storage::disk('public')->exists('/uploads/category/'.$subcategory->categoryimage);?>
+                                    @if($exists && $subcategory->categoryimage!=NULL)
+                                        <img class="" src="{{ asset('storage/uploads/category/'.$subcategory->categoryimage) }}"/>
+                                    @endif
+                                    
+                                </a>
+                            </div>
+                            <div class="ps-blog__content related-prd-content">
+                                <h3>{{$subcategory->name}}</h3>
+                                <p>{{$subcategory->shortdescription}}</p>
+                                <div class="ps-banner btn-block">
+                                    <a href="{{route('categorydetail',$subcategory->slug)}}" class="bg-warning ps-banner__shop">View Products</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  @endforeach
+              
+            </div>
+        </div>
+    </section>
+</div>
+    
+@endsection

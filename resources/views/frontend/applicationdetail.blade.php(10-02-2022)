@@ -1,0 +1,66 @@
+@extends('frontend.mainmaster')
+@section('title')
+@if($applicationdetail->metatitle!='')
+    {{ $applicationdetail->metatitle }}
+    @else
+    {{ $applicationdetail->applicationname }}
+    @endif
+@stop
+
+@section('metakeywords')
+@if($applicationdetail->metakeywords!='')
+    {{ $applicationdetail->metakeywords }}
+    @endif
+@stop
+
+@section('description')
+@if($applicationdetail->metadescription!='')
+    {{ $applicationdetail->metadescription }}
+@endif
+@stop
+@section('content')
+<?php  $exists = Storage::disk('public')->exists('/uploads/applicationbanner/'.$applicationdetail->banner);
+$backgroundurl='';
+        if($exists && $applicationdetail->banner!=NULL){
+            $backgroundurl= 'background-image:url(\''.asset('storage/uploads/applicationbanner/'.$applicationdetail->banner).'\')';
+        }
+        $categorylistinghtml='';
+ if(!$appcategories->isEmpty()){
+             
+       $categorylistinghtml=' <section class="ps-section--blog container-fluid">
+                <h3 class="ps-section__title display-1" style="font-size: 35px;">Products category </h3>
+                <div class="ps-section--category related-industries-category">';
+                    foreach($appcategories as $appcategory){
+                            $categorylistinghtml.='<div class="ps-section__item">
+                        <div class="ps-category__thumbnail"> 
+                            <a class="ps-category__image" href="'.route('categorydetail',$appcategory->slug).'">';
+                                 $exists = Storage::disk('public')->exists('/uploads/category/'.$appcategory->categoryimage);
+                                    if($exists && $appcategory->categoryimage!=NULL){
+                                        $categorylistinghtml.='<img class="" src="'.asset('storage/uploads/category/'.$appcategory->categoryimage).'"/>';
+                                    }
+                                    else{ $categorylistinghtml.='<img class="" src="'.$appcategory->name.'"/>';}
+                                    
+                            $categorylistinghtml.='</a>
+                            <div class="ps-category__content">
+                                <a class="ps-category__name" href="'.route('categorydetail',$appcategory->slug).'">'.$appcategory->name.'</a>
+                                <p>'.$appcategory->shortdescription.'</p>
+                                <a class="ps-category__more" href="'.route('categorydetail',$appcategory->slug).'">View More</a>
+                            </div>
+                        </div>
+                    </div>';
+                    }
+                    
+                $categorylistinghtml.='</div>
+            </section>';
+             }                                   
+?>                            
+<section>
+<div class="inner-title-background about-us-background mb-5" style="{{$backgroundurl}}">
+    <h1 class="service-heading">
+    {{$applicationdetail->applicationinfo}}
+    </h1>
+</div> 
+<div class="container-fluid py-5 px-5">{!! str_replace('[applicationcategories]', $categorylistinghtml, $applicationdetail->description) !!}</div>
+</section>
+
+@endsection

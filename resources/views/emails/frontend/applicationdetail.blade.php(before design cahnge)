@@ -1,0 +1,371 @@
+@extends('frontend.mainmaster')
+@section('title')
+@if($applicationdetail->metatitle!='')
+    {{ $applicationdetail->metatitle }}
+    @else
+    {{ $applicationdetail->applicationname }}
+    @endif
+@stop
+
+@section('metakeywords')
+@if($applicationdetail->metakeywords!='')
+    {{ $applicationdetail->metakeywords }}
+    @endif
+@stop
+
+@section('description')
+@if($applicationdetail->metadescription!='')
+    {{ $applicationdetail->metadescription }}
+@endif
+@stop
+@section('content')
+
+<div class="ps-home ps-home--8">
+            <div class="ps-home__content">
+                <div class="container-fluid">
+                    <section class="ps-section--banner ps-banner--container row"> 
+                        <div class="col-md-8 col-sm-12 pdr-0">
+                            <div class="static-banner-block">
+                                <div class="static-banner-img">
+                                    <?php  $exists = Storage::disk('public')->exists('/uploads/applicationbanner/'.$applicationdetail->banner);?>
+                                    @if($exists && $applicationdetail->banner!=NULL)
+                                        <img src="{{ asset('storage/uploads/applicationbanner/'.$applicationdetail->banner) }}" width="" height="150"/>
+                                    @else
+
+                                    @endif
+                                    
+                                </div>
+                                <div class="ps-banner static-banner-content">
+                                    <h1 class="ps-banner__title text-white">{{$applicationdetail->applicationname}}</h1>
+                                    <p>{{$applicationdetail->applicationinfo}}</p>
+                                    <!--<a class="bg-warning ps-banner__shop" href="#">{{$applicationdetail->applicationname}} Products</a>-->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="ps-login col-md-4 col-sm-12 pdl-0">
+                    <div class="home-login-register-wrap">
+                    <div class="mx-auto home-login-register-block">
+                        <div class="card-header border-bottom-0 bg-transparent">
+                        <ul class="nav nav-tabs" id="pills-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold active show" id="pills-register-tab" data-toggle="pill"
+                              href="#pills-register" role="tab" aria-controls="pills-register" aria-selected="false">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold" id="pills-login-tab" data-toggle="pill"
+                              href="#pills-login" role="tab" aria-controls="pills-login" aria-selected="false">Login</a>
+                            </li>
+                            
+                          
+                        </ul>
+                      </div>
+                        <div class="card-body pb-4">
+                          <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade login-info-block" id="pills-login" role="tabpanel" aria-labelledby="pills-login-tab">
+                               @include('frontend.homelogin')
+                            </div>
+
+                            <div class="tab-pane fade register-info-block show active" id="pills-register" role="tabpanel" aria-labelledby="pills-register-tab">
+                                <ul class="register-info-list"><h3>Register to access these great benefits!</h3>
+                                        <li><i class="icon-check"></i> Discounted pricing</li>
+                                        <li><i class="icon-check"></i> Quick quotes and checkout</li>
+                                        <li><i class="icon-check"></i> Order history and tracking</li>
+                                        <li><i class="icon-check"></i> Invoice copies</li>
+                                        <li><i class="icon-check"></i> and more...</li>
+                                </ul>   
+                                <div class="text-left pt-2 pb-1 home-reg-link-block">
+                                   <a href="{{route('register')}}" class="btn btn-secondary" data-toggle="modal" data-target="#loginpopup"><i class="icon-user"></i> Register</a>
+                                </div>
+                                <!--<div class="text-center pt-2 pb-1 d-flex home-reg-action-block">
+                                    <a href="{{route('login')}}" class="btn btn-primary mr-3"><i class="icon-lock"></i> Login</a>
+                                    <a href="{{route('register')}}" class="btn btn-secondary" data-toggle="modal" data-target="#loginpopup"><i class="icon-user"></i> Register</a>
+                                </div>-->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                    </section>
+                </div>
+            </div>
+
+            <section class="ps-about--info container-fluid">
+                <div class="container">
+                <div class="ps-about__extent mt-0">
+                    <section class="ps-about--info container-fluid">
+                        <div class="ps-about__extent mt-0">
+                            <div class="row">
+                                <div class="col-md-12">{!! $applicationdetail->description !!}</div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            </section>
+             @if(!$appcategories->isEmpty())
+             
+            <section class="ps-section--blog container-fluid">
+                <h3 class="ps-section__title display-1" style="font-size: 35px;">Products category </h3>
+                <div class="ps-section--category related-industries-category">
+                    @foreach($appcategories as $appcategory)
+                            <div class="ps-section__item">
+                        <div class="ps-category__thumbnail"> 
+                            <a class="ps-category__image" href="{{route('categorydetail',$appcategory->slug)}}">
+                                 <?php  $exists = Storage::disk('public')->exists('/uploads/category/'.$appcategory->categoryimage);?>
+                                    @if($exists && $appcategory->categoryimage!=NULL)
+                                        <img class="" src="{{ asset('storage/uploads/category/'.$appcategory->categoryimage) }}"/>
+                                    @else
+                                    <img src='' alt="{{$appcategory->name}}">
+                                    @endif
+                            </a>
+                            <div class="ps-category__content">
+                                <a class="ps-category__name" href="{{route('categorydetail',$appcategory->slug)}}">{{$appcategory->name}}</a>
+                                <p>{{$appcategory->shortdescription}}</p>
+                                <a class="ps-category__more" href="{{route('categorydetail',$appcategory->slug)}}">View More</a>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                    
+                </div>
+            </section>
+             @endif
+            
+
+
+
+             <section class="ps-section--latest ">
+            <div class="container-fluid">
+                <h3 class="ps-section__title">Our Partners</h3>
+                <div class="ps-section__carousel">
+                    <div class="owl-carousel" data-owl-auto="false" data-owl-loop="true" data-owl-speed="13000" data-owl-gap="0" data-owl-nav="true" data-owl-dots="true" data-owl-item="5" data-owl-item-xs="2" data-owl-item-sm="2" data-owl-item-md="3" data-owl-item-lg="5" data-owl-item-xl="5" data-owl-duration="1000" data-owl-mousedrag="on">
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product.html">
+                                        <figure><img src="{{ URL::asset('frontend/img/ptlogo1.png') }}" alt="alt" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product.html">
+                                        <figure><img src="{{ URL::asset('frontend/img/ptlogo2.png') }}" alt="alt" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product.html">
+                                        <figure><img src="{{ URL::asset('frontend/img/ptlogo3.png') }}" alt="alt" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product.html">
+                                        <figure><img src="{{ URL::asset('frontend/img/ptlogo4.png') }}" alt="alt" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product.html">
+                                        <figure><img src="{{ URL::asset('frontend/img/ptlogo5.png') }}" alt="alt" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product.html">
+                                        <figure><img src="{{ URL::asset('frontend/img/ptlogo6.png') }}" alt="alt" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product.html">
+                                        <figure><img src="{{ URL::asset('frontend/img/ptlogo7.png') }}" alt="alt" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product.html">
+                                        <figure><img src="{{ URL::asset('frontend/img/ptlogo8.png') }}" alt="alt" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                         <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product.html">
+                                        <figure><img src="{{ URL::asset('frontend/img/ptlogo10.png') }}" alt="alt" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product.html">
+                                        <figure><img src="{{ URL::asset('frontend/img/ptlogo11.png') }}" alt="alt" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product.html">
+                                        <figure><img src="{{ URL::asset('frontend/img/ptlogo12.png') }}" alt="alt" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product.html">
+                                        <figure><img src="{{ URL::asset('frontend/img/ptlogo13.png') }}" alt="alt" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+               
+            </div>
+<div class="modal fade" id="loginpopup" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered ps-quickview">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="wrap-modal-slider container-fluid ps-quickview__body p-0">
+                        <button class="close ps-quickview__close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="ps-product--detail">
+                            <div class="row">
+                                
+                                <div class="col-12 col-xl-12 register-form">
+                                    <h4>Register</h4>
+                                    <x-jet-validation-errors class="mb-4" />
+                                    <form method="POST" action="{{ route('ajaxregister') }}" id='ajaxregisterform'>
+                                    @csrf
+                                    <div>
+                                    <x-jet-label for="name" value="{{ __('Contact Name*') }}" />
+                                    <x-jet-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+                                    </div>
+                                    <div>
+                                        <x-jet-label for="posttitle" value="{{ __('Title/Role') }}" />
+                                        <x-jet-input id="posttitle" class="block mt-1 w-full" type="text" name="posttitle" :value="old('posttitle')"  autofocus autocomplete="posttitle" />
+                                    </div>
+
+                                    <div>
+                                        <x-jet-label for="email" value="{{ __('Email*') }}" />
+                                        <x-jet-input id="email" class="block w-full" type="email" name="email" :value="old('email')" required />
+                                    </div>
+
+                                    <div>
+                                        <x-jet-label for="phoneno" value="{{ __('Phone No*') }}" />
+                                        <x-jet-input id="phoneno" class="block w-full" type="text" name="phoneno" :value="old('phoneno')" required autofocus autocomplete="phoneno" />
+                                    </div>
+                                    <div>
+                                        <x-jet-label for="company" value="{{ __('Company Name*') }}" />
+                                        <x-jet-input id="company" class="block mt-1 w-full" type="text" name="company" :value="old('company')" required autofocus autocomplete="company" />
+                                    </div>
+                                    <div>
+                                        <x-jet-label for="bill_address1" value="{{ __('Corporate Address') }}" />
+                                        <x-jet-input id="bill_address1" class="block mt-1 w-full" type="text" name="bill_address1" :value="old('bill_address1')" autofocus autocomplete="bill_address1" />
+                                    </div>
+                                    <div>
+                                        <x-jet-label for="password" value="{{ __('Password*') }}" />
+                                        <x-jet-input id="password" class="block w-full" type="password" name="password" required autocomplete="new-password" />
+                                    </div>
+
+                                    <div>
+                                        <x-jet-label for="password_confirmation" value="{{ __('Confirm Password*') }}" />
+                                        <x-jet-input id="password_confirmation" class="block w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
+                                    </div>
+
+                                    @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
+                                        <div>
+                                            <x-jet-label for="terms">
+                                                <div class="flex items-center">
+                                                    <x-jet-checkbox name="terms" id="terms"/>
+
+                                                    <div class="ml-2">
+                                                        {!! __('I agree to the :terms_of_service and :privacy_policy', [
+                                                                'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 hover:text-gray-900">'.__('Terms of Service').'</a>',
+                                                                'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 hover:text-gray-900">'.__('Privacy Policy').'</a>',
+                                                        ]) !!}
+                                                    </div>
+                                                </div>
+                                            </x-jet-label>
+                                        </div>
+                                    @endif
+
+                                    <div class="flex items-center justify-end mt-4">
+                                        <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
+                                            {{ __('Already registered?') }}
+                                        </a>
+                                        <div class="reg-action-block">
+                                            <button type='submit' id='ajaxregisterbtn' class="btn btn-primary mt-4 w-100">
+                                                {{ __('Register') }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id='registererrors'></div>
+                                    <div id='results'></div>
+                                </form>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

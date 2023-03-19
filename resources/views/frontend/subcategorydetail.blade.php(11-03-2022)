@@ -1,0 +1,105 @@
+@extends('frontend.mainmaster')
+@section('title')
+@if($categorydetail->metatitle!='')
+    {{ $categorydetail->metatitle }}
+    @else
+    {{ $categorydetail->name }}
+    @endif
+@stop
+
+@section('metakeywords')
+@if($categorydetail->metakeywords!='')
+    {{ $categorydetail->metakeywords }}
+    @endif
+@stop
+
+@section('description')
+@if($categorydetail->metadescription!='')
+    {{ $categorydetail->metadescription }}
+@endif
+@stop
+@section('content')
+
+<div class="sbbcate ps-home ps-home--8 maininnerpage">
+    <div class="ps-home__content">
+        <div class="container-fluid">
+            <section class="ps-banner--container row"> 
+                <div class="col-md-12 col-sm-12 pdr-0">
+                    <div class="static-banner-block">
+                            <?php  $exists = Storage::disk('public')->exists('/uploads/categorybanner/'.$categorydetail->banner);?>
+                            @if($exists && $categorydetail->banner!=NULL)
+                             <div class="static-banner-img">
+                                <img class="" src="{{ asset('storage/uploads/categorybanner/'.$categorydetail->banner) }}"/>
+                                </div>
+                            @else
+                                <div class="static-banner-img">
+                                <img class="" src="{{ asset('storage/uploads/categorybanner/'.$categorydetail->banner) }}"/>
+                                </div>
+                            @endif
+                        
+                        <div class="ps-banner static-banner-content">
+                            <h1 class="ps-banner__title text-white">{{$categorydetail->name}}</h1>
+                            @if($categorydetail->shortdescription!='' || $categorydetail->shortdescription!=NULL)
+                            <p>{{$categorydetail->shortdescription}}</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="container">
+    <section class="sbbcatesec ps-about--info container-fluid">
+        <div class="container">
+            <div class="ps-about__extent">
+                <section class="ps-about--info container-fluid">
+                    <div class="ps-about__extent categorydescription">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2 class="ps-banner__title">{{ ucwords(strtolower($categorydetail->name)) }}</h2>
+                            </div>
+                            <div class="col-md-12">
+                                {!! $categorydetail->description !!}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+
+    <section class="sbbcatesec1 ps-section--blog container-fluid product-catogory-block prd-bg-white">
+        <div class="container">
+            <div class="product-category-listing">
+                 @foreach($productlist as $product)
+                    <div class="ps-section__item">
+                        <div class="ps-blog--latset estorelisting ">
+                            <div class="ps-blog__thumbnail">
+                                <a href="{{route('productdetail',$product->slug)}}">
+                                    <?php  $exists = Storage::disk('public')->exists('/uploads/product-thumbnail/'.$product->productimage);?>
+                                    @if($exists && $product->productimage!=NULL)
+                                        <img class="" src="{{ asset('storage/uploads/product-thumbnail/'.$product->productimage) }}"/>
+                                    @else
+                                         <img class="" src="{{ asset('storage/uploads/product/'.$product->productimage) }}"/>
+                                    @endif
+                                    
+                                </a>
+                            </div>
+                            <div class="ps-blog__content related-prd-content catproductlisting ">
+                                <h3>{{$product->productname}}</h3>
+                                
+                                <div class="ps-banner btn-block">
+                                    <a href="{{route('productdetail',$product->slug)}}" class="bg-warning ps-banner__shop">View Product</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  @endforeach
+                  {!! $productlist->links() !!}
+            </div>
+        </div>
+    </section>
+</div>
+</div>
+    
+@endsection

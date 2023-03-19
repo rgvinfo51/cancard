@@ -1,0 +1,86 @@
+@extends('frontend.mainmaster')
+
+@section('content')
+        <div class="ps-home ps-home--8 registerarea">
+            <div class="ps-home__content">
+                <div class="auth-wrap">
+                    <div class="row">
+                        <div class='col-md-12'>
+                            <h3>Register</h3>
+                        </div>
+                        <div class='col-md-12'>
+                            <x-jet-validation-errors class="mb-4 validation-error-block" />
+                            <form method="POST" action="{{ route('customregister') }}">
+                                @csrf
+
+                                <div>
+                                    <x-jet-label for="name" value="{{ __('Contact Name*') }}" />
+                                    <x-jet-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+                                </div>
+                                <div>
+                                    <x-jet-label for="posttitle" value="{{ __('Title/Role*') }}" />
+                                    <x-jet-input id="posttitle" class="block mt-1 w-full" type="text" name="posttitle" :value="old('posttitle')" required autofocus autocomplete="posttitle" />
+                                </div>
+
+                                <div class="mt-4">
+                                    <x-jet-label for="email" value="{{ __('Email*') }}" />
+                                    <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
+                                </div>
+                                
+                                <div>
+                                    <x-jet-label for="phoneno" value="{{ __('Phone No*') }}" />
+                                    <x-jet-input id="phoneno" class="block mt-1 w-full" type="text" name="phoneno" :value="old('phoneno')" required autofocus autocomplete="phoneno" />
+                                </div>
+                                 <div>
+                                        <x-jet-label for="company" value="{{ __('Company Name*') }}" />
+                                        <x-jet-input id="company" class="block mt-1 w-full" type="text" name="company" :value="old('company')" required autofocus autocomplete="company" />
+                                    </div>
+                                 {{-- <div>
+                                        <x-jet-label for="corporateaddress" value="{{ __('Address') }}" />
+                                        <x-jet-input id="corporateaddress" class="block mt-1 w-full" type="text" name="bill_address1" :value="old('bill_address1')" autofocus autocomplete="bill_address1" />
+                                    </div> --}}
+                                    
+                                
+                                <div class="mt-4">
+                                    <x-jet-label for="password" value="{{ __('Password*') }}" />
+                                    <x-jet-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
+                                </div>
+
+                                <div class="mt-4">
+                                    <x-jet-label for="password_confirmation" value="{{ __('Confirm Password*') }}" />
+                                    <x-jet-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
+                                </div>
+
+                                @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
+                                    <div class="mt-4">
+                                        <x-jet-label for="terms">
+                                            <div class="flex items-center">
+                                                <x-jet-checkbox name="terms" id="terms"/>
+
+                                                <div class="ml-2">
+                                                    {!! __('I agree to the :terms_of_service and :privacy_policy', [
+                                                            'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 hover:text-gray-900">'.__('Terms of Service').'</a>',
+                                                            'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 hover:text-gray-900">'.__('Privacy Policy').'</a>',
+                                                    ]) !!}
+                                                </div>
+                                            </div>
+                                        </x-jet-label>
+                                    </div>
+                                @endif
+
+                                <div class="d-flex align-items-center justify-content-between mt-4">
+                                    <a class="link-text" href="{{ route('login') }}">
+                                        {{ __('Already registered?') }}
+                                    </a>
+                                    <!-- <x-jet-button class="ml-4">
+                                        {{ __('Register') }}
+                                    </x-jet-button> -->
+                                    <button class="btn btn-primary">{{ __('Register') }}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+@endsection
